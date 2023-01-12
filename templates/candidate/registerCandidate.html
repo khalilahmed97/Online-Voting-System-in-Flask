@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ===== Iconscout CSS ===== -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <!-- ===== CSS ===== -->
+    <link rel="stylesheet" href="{{url_for('static',filename='loginStyle.css')}}">
+    <title>Candidate Registeration</title>
+    <style>
+        .alert {
+            position: absolute;
+            padding: 20px;
+            background-color: rgb(9, 146, 161);
+            color: white;
+            margin-bottom: 15px;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+        }
+
+        /* The close button */
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+            color: black;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container active">
+        <div class="forms">
+            <div class="form signup">
+                <span class="title">Registration</span>
+
+                <form action="" method="POST">
+                    <div class="input-field">
+                        <input type="text" placeholder="Enter your name" name="name" required>
+                        <i class="uil uil-user"></i>
+                    </div>
+                    <div class="input-field">
+                        <input type="text" placeholder="Enter your Cnic" name="cnic" required>
+                        <i class="uil uil-envelope icon"></i>
+                    </div>
+                    <div class="input-field">
+                        <input type="date" placeholder="Enter your Date of Birth" name="dob" required>
+                        <i class="uil uil-envelope icon"></i>
+                    </div>
+                    <div class="input-field">
+                        <input type="text" placeholder="Enter Party Symbol" name="party_symbol" required>
+                        <i class="uil uil-envelope icon"></i>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" class="password" placeholder="Create a password" name="password"
+                            required>
+                        <i class="uil uil-lock icon"></i>
+                    </div>
+
+                    <div class="input-field">
+                        <input type="password" class="password" placeholder="Confirm a password" name="confirm_password"
+                            required>
+                        <i class="uil uil-lock icon"></i>
+                        <i class="uil uil-eye-slash showHidePw"></i>
+                    </div>
+
+
+
+                    <div class="input-field button">
+                        <button type="submit">Signup</button>
+                    </div>
+                </form>
+
+                <div class="login-signup">
+                    <span class="text">Already a member?
+                        <a href="/login_candidate" class="text login-link">Login Now</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{msg}}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+</body>
+</body>
+
+</html>

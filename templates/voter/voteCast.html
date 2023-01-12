@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="{{url_for('static',filename='candidateDashboardStyle.css')}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Casting Page</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid rgb(56, 55, 55);
+        }
+
+        .table-users {
+            border: 1px solid rgb(56, 55, 55);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.318);
+            max-width: calc(100% - 2em);
+            margin: 1em auto;
+            overflow: hidden;
+            width: 800px;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table th {
+            font-weight: 100;
+            text-align: center;
+        }
+
+        .alert {
+            padding: 20px;
+            background-color: rgb(8, 148, 194);
+            color: white;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+        }
+
+        /* The close button */
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+            color: black;
+        }
+
+        .scrollBar {
+            overflow: scroll;
+            height: 200px;
+        }
+
+        .scrollBar::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .scrollBar::-webkit-scrollbar-track {
+            background: none;
+        }
+
+        /* Handle */
+        .scrollBar::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        /* Handle on hover */
+        .scrollBar::-webkit-scrollbar-thumb:hover {
+
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header class="app-header">
+            <div class="app-header-logo">
+                <div class="logo">
+                    <span class="logo-icon">
+                        <img src="https://assets.codepen.io/285131/almeria-logo.svg" />
+                    </span>
+                    <h1 class="logo-title">
+                        <span>Voting</span>
+                        <span>System</span>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="app-header-actions">
+                <button class="user-profile">
+                    <span>{{session.name}}</span>
+                    <span>
+                        <img src="{{session.pic}}" />
+                    </span>
+                </button>
+                <div class="app-header-actions-buttons">
+                    <button class="icon-button large">
+                        <i class="ph-magnifying-glass"></i>
+                    </button>
+                    <button class="icon-button large">
+                        <i class="ph-bell"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="app-header-mobile">
+                <button class="icon-button large">
+                    <i class="ph-list"></i>
+                </button>
+            </div>
+            <div class="btn logoutBtn">
+                <a href="/logout">LOG OUT</a>
+            </div>
+
+        </header>
+        <div class="app-body">
+            <div class="app-body-navigation">
+                <nav class="navigation">
+                    <a href="/voter">
+                        <i class="ph-browsers"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/voteCast">
+                        <i class="ph-check-square"></i>
+                        <span>Cast Vote</span>
+                    </a>
+
+                    <a href="/stats">
+                        <i class="ph-file-text"></i>
+                        <span>Statistics</span>
+                    </a>
+                </nav>
+                <footer class="footer">
+                    <h1>Almeria<small>©</small></h1>
+                    <div>
+                        Almeria ©<br />
+                        All Rights Reserved 2021
+                    </div>
+                </footer>
+            </div>
+            <div class="app-body-main-content">
+                <section class="service-section">
+                    <h2>VOTE CAST</h2>
+                    <form action="/voted" method="POST">
+                        <div class="table-users">
+
+                            <div class="scrollBar">
+                                <table cellspacing="0">
+                                    <tr>
+                                        <th width="200">Picture</th>
+                                        <th width="200">Name</th>
+                                        <th width="200">Party Sign</th>
+                                        <th width="230">Vote</th>
+                                    </tr>
+
+                                    {% for row in candidates %}
+
+                                    <tr id="{{row.ID}}">
+                                        <td><img src="{{session.pic}}" width="50"alt="" />
+                                        <td><input type="hidden" name="name" value="{{row.name}}">{{row.name}}</td>
+                                        <td><input type="hidden" name="partySymbol"
+                                                value="{{row.party_symbol}}">{{row.party_symbol}}</td>
+                                        <td>
+                                            <input type="checkbox" name="vote" value="{{row.name}}">
+                                        </td>
+                                    </tr>
+
+                                    {% endfor %}
+
+                            </div>
+                            </table>
+                        </div>
+            </div>
+
+            <button class="btn" type="submit">VOTE</button>
+
+            </form>
+          
+            </section>
+           
+        </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{msg}}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+       
+       
+        <script>
+            // Get all elements with class="closebtn"
+            var close = document.getElementsByClassName("closebtn");
+            var i;
+
+            // Loop through all close buttons
+            for (i = 0; i < close.length; i++) {
+                // When someone clicks on a close button
+                close[i].onclick = function () {
+
+                    // Get the parent of <span class="closebtn"> (<div class="alert">)
+                    var div = this.parentElement;
+
+                    // Set the opacity of div to 0 (transparent)
+                    div.style.opacity = "0";
+
+                    // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+                    setTimeout(function () { div.style.display = "none"; }, 600);
+                }
+            }
+        </script>
+
+</body>
+
+</html>

@@ -32,52 +32,54 @@
       "responses": ["Happy to help!", "Any time!", "My pleasure"]
     },
     {
-      "tag": "items",
+      "tag": "how to vote",
       "patterns": [
-        "Which items do you have?",
-        "What kinds of items are there?",
-        "What do you sell?"
+        "Vote kaise cast karsekte hain",
+        "Vote kaise dalein",
+        "what are the necessary steps for voting",
+        "Do we have to register ourself in order to vote"
       ],
       "responses": [
-        "We sell coffee and tea",
-        "We have coffee and tea"
+        "Vote can be cast by first register yourself in the system and login to cast vote",
+        "First have to register yourself and then login into the system, there you can find the option to cast vote"
       ]
     },
     {
-      "tag": "payments",
+      "tag": "safety",
       "patterns": [
-        "Do you take credit cards?",
-        "Do you accept Mastercard?",
-        "Can I pay with Paypal?",
-        "Are you cash only?"
+        "How do we know that our votes are safe",
+        "Are there any chances of my vote being not cast or cast to the wrong candidate",
+        "Is there is any chances of misusing the system",
+        "Does the system ensures that our votes are safe?"
       ],
       "responses": [
-        "We accept VISA, Mastercard and Paypal",
-        "We accept most major credit cards, and Paypal"
+        "Our system is fool proof and there are very less chances of being misuse",
+        "The system ensures that the vote is casted to the voter respective candidate and not being cast to other"
       ]
     },
     {
-      "tag": "delivery",
+      "tag": "multiple votes",
       "patterns": [
-        "How long does delivery take?",
-        "How long does shipping take?",
-        "When do I get my delivery?"
+        "Kia hum aik sai ziada vote cast karsekte hain?",
+        "Can we cast vote more than ones?",
+        "Can we cast votes twice?"
       ],
       "responses": [
-        "Delivery takes 2-4 days",
-        "Shipping takes 2-4 days"
+        "The system ensures that the voter can cast vote only ones",
+        "No, voter can not cast vote more than ones",
+        "Jee nahi! ap aik sai ziada vote cast nahi karsekte"
       ]
     },
     {
-      "tag": "funny",
+      "tag": "candidate register",
       "patterns": [
-        "Tell me a joke!",
-        "Tell me something funny!",
-        "Do you know a joke?"
+        "How can a candidate can register themself into the system",
+        "Ummed var kaise system ko istemal kar sakta hai",
+        "how can a candidate register himself",
+        "how can a candidate register herself"
       ],
       "responses": [
-        "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
-        "What did the buffalo say when his son left for college? Bison."
+        "Candidate can use the system by first registering themselves into the system and then login into the system to use it"
       ]
     }
   ]

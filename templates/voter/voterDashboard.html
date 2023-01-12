@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="{{url_for('static',filename='candidateDashboardStyle.css')}}" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Dashboard</title>
+</head>
+<body>
+    <div class="app">
+        <header class="app-header">
+            <div class="app-header-logo">
+                <div class="logo">
+                    <span class="logo-icon">
+                        <img src="https://assets.codepen.io/285131/almeria-logo.svg" />
+                    </span>
+                    <h1 class="logo-title">
+                        <span>Voting</span>
+                        <span>System</span>
+                    </h1>
+                </div>
+            </div>
+            
+            <div class="app-header-actions">
+                <button class="user-profile">
+                    <div class="user-profile">
+                       
+                    <span>{{session.name}}</span>
+                    <span>
+                        <img src="{{session.pic}}" />
+                    </span>
+                </button>
+                <div class="app-header-actions-buttons">
+                    <button class="icon-button large">
+                        <i class="ph-magnifying-glass"></i>
+                    </button>
+                    <button class="icon-button large">
+                        <i class="ph-bell"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="app-header-mobile">
+                <button class="icon-button large">
+                    <i class="ph-list"></i>
+                </button>
+            </div>
+            <div class="btn logoutBtn">
+                <a href="/logout">LOG OUT</a>
+            </div>
+    
+        </header>
+        <div class="app-body">
+            <div class="app-body-navigation">
+                <nav class="navigation">
+                    <a href="/voter">
+                        <i class="ph-browsers"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/voteCast">
+                        <i class="ph-check-square"></i>
+                        <span>Cast Vote</span>
+                    </a>
+                    <a href="/stats">
+                        <i class="ph-file-text"></i>
+                        <span>Statistics</span>
+                    </a>
+                </nav>
+                <footer class="footer">
+                    <h1>Almeria<small>©</small></h1>
+                    <div>
+                        Almeria ©<br />
+                        All Rights Reserved 2021
+                    </div>
+                </footer>
+            </div>
+            <div class="app-body-main-content">
+                <section class="service-section">
+                    <h2>Service</h2>
+                    <div class="service-section-header">
+                        <div class="search-field">
+
+                            <i class="ph-magnifying-glass"></i>
+                            <h3 type="text" placeholder="Account number">CNIC: {{session.cnic}}</h3>
+                        </div>
+                        <div class="dropdown-field">
+                            <h3 type="text" placeholder="Account number">AGE: {{session.age}} </h3>
+                        </div>
+                    </div>
+                 
+                    <div class="tiles">
+                        <article class="tile">
+                            <div class="tile-header">
+                                <i class="ph-lightning-light"></i>
+                                <h3>
+                                    <span>Electricity</span>
+                                    <span>UrkEnergo LTD.</span>
+                                </h3>
+                            </div>
+                            <a href="#">
+                                <span>Go to service</span>
+                                <span class="icon-button">
+                                    <i class="ph-caret-right-bold"></i>
+                                </span>
+                            </a>
+                        </article>
+                        <article class="tile">
+                            <div class="tile-header">
+                                <i class="ph-fire-simple-light"></i>
+                                <h3>
+                                    <span>Heating Gas</span>
+                                    <span>Gazprom UA</span>
+                                </h3>
+                            </div>
+                            <a href="#">
+                                <span>Go to service</span>
+                                <span class="icon-button">
+                                    <i class="ph-caret-right-bold"></i>
+                                </span>
+                            </a>
+                        </article>
+                        <article class="tile">
+                            <div class="tile-header">
+                                <i class="ph-file-light"></i>
+                                <h3>
+                                    <span>Tax online</span>
+                                    <span>Kharkov 62 str.</span>
+                                </h3>
+                            </div>
+                            <a href="#">
+                                <span>Go to service</span>
+                                <span class="icon-button">
+                                    <i class="ph-caret-right-bold"></i>
+                                </span>
+                            </a>
+                        </article>
+                    </div>
+                    <div class="service-section-footer">
+                        <p>Services are paid according to the current state of the currency and tariff.</p>
+                    </div>
+                </section>
+                <section class="transfer-section">
+                    <div class="transfer-section-header">
+                        <h2>Latest transfers</h2>
+                        <div class="filter-options">
+                            <p>Filter selected: more than 100 $</p>
+                            <button class="icon-button">
+                                <i class="ph-funnel"></i>
+                            </button>
+                            <button class="icon-button">
+                                <i class="ph-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="transfers">
+                        <div class="transfer">
+                            <div class="transfer-logo">
+                                <img src="https://assets.codepen.io/285131/apple.svg" />
+                            </div>
+                            <dl class="transfer-details">
+                                <div>
+                                    <dt>Apple Inc.</dt>
+                                    <dd>Apple ID Payment</dd>
+                                </div>
+                                <div>
+                                    <dt>4012</dt>
+                                    <dd>Last four digits</dd>
+                                </div>
+                                <div>
+                                    <dt>28 Oct. 21</dt>
+                                    <dd>Date payment</dd>
+                                </div>
+                            </dl>
+                            <div class="transfer-number">
+                                - $ 550
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+    </div>
+</body>
+</html>
