@@ -2,7 +2,7 @@ In order to run the system you have follow these steps:
 1)- After downloading all the libraries Run the command (python train.py) to train the chatbot data
 2) Run the command (python app.py) to run the server
 
-------------------- DATABASE -----------------------
+------------------------ DATABASE ------------------------
 
 DATABASE NAME = online_voting_system
 NUMBER OF TABLES IN A DATABASE = 3
