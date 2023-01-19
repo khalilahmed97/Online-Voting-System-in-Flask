@@ -1,6 +1,21 @@
+# PROJECT SCREEN SHOTS
+
+![display_img](https://user-images.githubusercontent.com/101020879/213549690-b88d9cc4-0b45-45ad-8f4e-0d994eb54119.png)
+
+![image](https://user-images.githubusercontent.com/101020879/213549755-09df36c4-5bfa-44ea-b0f2-2fd27e29ae34.png)
+
+![image](https://user-images.githubusercontent.com/101020879/213549799-b9809847-9a86-4d2e-a86b-296d968155d5.png)
+
+![image](https://user-images.githubusercontent.com/101020879/213550252-3d46f238-17b4-4464-a44e-7e309901dd48.png)
+
+![image](https://user-images.githubusercontent.com/101020879/213550487-12a85107-da5f-43aa-b790-7ce954d01086.png)
+
+# STEPS
+
 In order to run the system you have to follow these steps:
 1)- After downloading all the libraries Run the command (python train.py) to train the chatbot data
 2) Run the command (python app.py) to run the server
+
 
 ------------------------ DATABASE ------------------------
 
