@@ -1,4 +1,4 @@
-In order to run the system you have follow these steps:
+In order to run the system you have to follow these steps:
 1)- After downloading all the libraries Run the command (python train.py) to train the chatbot data
 2) Run the command (python app.py) to run the server
 
