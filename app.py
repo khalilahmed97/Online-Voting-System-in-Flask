@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, json
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
 from chat import get_response
 from flask_cors import CORS
 import cv2
@@ -37,6 +37,13 @@ def index_get():
 def voter():
     return render_template("voter/voterDashboard.html")
 
+@app.post("/predict")
+def predict():
+    text = request.get_json().get("message")
+    response = get_response(text)
+    message = {"answer": response}
+    return jsonify(message)
+
 @app.route("/register_voter", methods=['GET', 'POST'])
 def register_voter():
     mesage = ''
@@ -52,17 +59,19 @@ def register_voter():
             flash("Warning! AGE IS LESS THAN 18")
     
         elif age >= 18:
-            if password == confirmPassword:
+            if password == confirmPassword:  
+                
+                
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor.execute('SELECT * FROM voters WHERE cnic = %s', (cnic, ))
                 account = cursor.fetchone()
                 if account:
                     flash('Account already exists !')
+                
                 elif not name or not password or not cnic:
                     flash('Please fill out the form !')
                 else:
                   
-
                     userimagefolder = 'static/faces/'+cnic
                     if not os.path.isdir(userimagefolder):
                         os.makedirs(userimagefolder)
@@ -75,8 +84,8 @@ def register_voter():
                             cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
                             cv2.putText(frame,f'Images Captured: {i}/50',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
                             if j%10==0:
-                                newCnic = cnic+'_'+str(i)+'.jpg'
-                                cv2.imwrite(userimagefolder+'/'+newCnic,frame[y:y+h,x:x+w])
+                                info = cnic+'_'+name+'_'+str(i)+'.jpg'
+                                cv2.imwrite(userimagefolder+'/'+info,frame[y:y+h,x:x+w])
                                 i+=1
                             j+=1
                         if j==500:
@@ -86,7 +95,7 @@ def register_voter():
                         if cv2.waitKey(1)==27:
                             break
 
-                    locationPic = 'static/faces/'+cnic+'/'+cnic+'_3.jpg'
+                    locationPic = 'static/faces/'+cnic+'/'+cnic+'_'+name+'_3.jpg'
                     cursor.execute('INSERT INTO voters(name,pic,cnic,age,password, voted) VALUES (%s,%s, %s, %s, %s, %s)', (name,locationPic, cnic,age, password, 0))
                     mysql.connection.commit()
                     cursor.close()
@@ -94,7 +103,7 @@ def register_voter():
                     cv2.destroyAllWindows()
                     print('Training Model')
                     train_model()
-                    names,rolls,times,l = extract_attendance()    
+                    cnics,times,l = extract_attendance()    
                     flash('You have successfully registered !')
                     return render_template('voter/registerVoter.html', mesage = mesage)
        
@@ -131,19 +140,19 @@ def login_voter():
                     cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
                     face = cv2.resize(frame[y:y+h,x:x+w], (50, 50))
                     identified_person = identify_face(face.reshape(1,-1))[0]
-                    add_attendance(identified_person)
+                    add_login_time(identified_person)
                     cv2.putText(frame,f'{identified_person}',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
                 cv2.imshow('LOGIN',frame)
                 if (cv2.waitKey(1) & 0xFF) == ord('q'):
                     break
             cap.release()
             cv2.destroyAllWindows()
-            names,rolls,times,l = extract_attendance()    
+            cnics,times,l = extract_attendance()    
             return redirect(url_for("voter"))
 
      
         else:
-            flash('Please enter correct email / password !')
+            flash('Please Enter Correct Email / Password !')
 
        
     return render_template('voter/loginVoter.html', message = message)
@@ -161,34 +170,36 @@ def voteCast():
 @app.route("/voted", methods=["GET","POST"])
 def voted():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    
     if request.method == "POST":
         cursor.execute('SELECT * FROM candidates')
         mysql.connection.commit()
         data = cursor.fetchall()
-        candidateMame = request.form.getlist("vote")[0]
+        candidateName = request.form.getlist("vote")[0]
+     
         voterName = session['name']
         cursor.execute('SELECT * FROM voters WHERE name = %s', (voterName,))
         user = cursor.fetchone()
 
-        if user["voted"] == 0:
-            cursor.execute('UPDATE votes SET number_of_votes = number_of_votes+1 WHERE candidate_name = %s', (candidateMame,))
-            cursor.execute('UPDATE voters SET voted = %s WHERE name = %s', (1, voterName,))
-            cursor.execute('UPDATE candidates SET voted = %s WHERE name = %s', (1, voterName,))
-            mysql.connection.commit()
-            cursor.close()
-            flash("VOTED SUCCESSFULLY!")
-           
-        else:
-            if len(request.form.getlist("vote")) > 1:
-                flash("PLEASE SELECT ONLY ONE CANDIDATE")
+        if len(request.form.getlist("vote")) > 1:
+                flash("Error! PLEASE SELECT ONLY ONE CANDIDATE")
 
-            if len(request.form.getlist("vote")) == 0:
+        elif len(request.form.getlist("vote")) == 0:
                 flash("PLEASE SELECT A CANDIDATE")
 
-        
-             
-    flash("ERROR! CAN NOT VOTE MORE THAN ONES")
+        elif len(request.form.getlist("vote")) == 1:
+          
+            if int(user["voted"]) == 0:
+                cursor.execute('UPDATE votes SET number_of_votes = number_of_votes+1 WHERE candidate_name = %s', (candidateName,))
+                cursor.execute('UPDATE voters SET voted = %s WHERE name = %s', (1, voterName,))
+                mysql.connection.commit()
+                cursor.close()
+            
+                flash("VOTED SUCCESSFULLY!")
+            
+            elif int(user["voted"]) == 1:
+                flash("Error! Can not vote twice")
+
+            
          
     return render_template("voter/voteCast.html", candidates=data)
 
@@ -200,16 +211,23 @@ def logout():
     session.pop("voter", None)
     return redirect(url_for("index_get"))  
 
-@app.route("/stats")
-def stats():
+@app.route("/voterStats")
+def voterStats():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM votes')
     mysql.connection.commit()
     data = cursor.fetchall()
 
-    return render_template("stats.html", candidates=data)  
+    return render_template("voter/voterStats.html", candidates=data)  
 
+@app.route("/candidateStats")
+def candidateStats():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM votes')
+    mysql.connection.commit()
+    data = cursor.fetchall()
 
+    return render_template("candidate/candidateStats.html", candidates=data)  
 
 # CANDIDATE SECTION
 @app.route("/candidate", methods=['GET', 'POST'])
@@ -231,11 +249,13 @@ def register_candidate():
         age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
         if age < 18:
-            flash("Warning! AGE IS LESS THAN 18")
+            flash("WARNING! AGE IS LESS THAN 18")
     
         elif age >= 18:
 
             if password == confirmPassword:
+                
+                hashedPassword = hashlib.sha256(password.encode())
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor.execute('SELECT * FROM candidates WHERE cnic = (%s)', (cnic,))
                 account = cursor.fetchone()
@@ -256,8 +276,8 @@ def register_candidate():
                             cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
                             cv2.putText(frame,f'Images Captured: {i}/50',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
                             if j%10==0:
-                                newCnic = cnic+'_'+str(i)+'.jpg'
-                                cv2.imwrite(userimagefolder+'/'+newCnic,frame[y:y+h,x:x+w])
+                                info = cnic+'_'+name+'_'+str(i)+'.jpg'
+                                cv2.imwrite(userimagefolder+'/'+info,frame[y:y+h,x:x+w])
                                 i+=1
                             j+=1
                         if j==500:
@@ -266,8 +286,8 @@ def register_candidate():
                         if cv2.waitKey(1)==27:
                             break
 
-                    locationPic = 'static/faces/'+cnic+'/'+cnic+'_3.jpg'
-                    cursor.execute('INSERT INTO candidates(name,pic,cnic,age,party_symbol,password,voted) VALUES (%s,%s, %s,%s,%s, %s, %s)', (name,locationPic,cnic,age,partySymbol,password, 0))
+                    locationPic = 'static/faces/'+cnic+'/'+cnic+'_'+name+'_3.jpg'
+                    cursor.execute('INSERT INTO candidates(name,pic,cnic,age,party_symbol,password) VALUES (%s,%s, %s,%s,%s, %s)', (name,locationPic,cnic,age,partySymbol,hashedPassword))
                     cursor.execute('INSERT INTO votes(pic, candidate_name,party_symbol,number_of_votes) VALUES (%s,%s, %s, %s)', (locationPic, name,partySymbol,0))
                     mysql.connection.commit()
                     cursor.close()
@@ -275,7 +295,7 @@ def register_candidate():
                     cv2.destroyAllWindows()
                     print('Training Model')
                     train_model()
-                    names,rolls,times,l = extract_attendance()    
+                    cnics,times,l = extract_attendance()    
                     flash('You have successfully registered !')
                     return render_template('candidate/registerCandidate.html', mesage = mesage)
                     
@@ -311,22 +331,20 @@ def login_candidate():
                     cv2.rectangle(frame,(x, y), (x+w, y+h), (255, 0, 20), 2)
                     face = cv2.resize(frame[y:y+h,x:x+w], (50, 50))
                     identified_person = identify_face(face.reshape(1,-1))[0]
-                    add_attendance(identified_person)
+                    add_login_time(identified_person)
                     cv2.putText(frame,f'{identified_person}',(30,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255, 0, 20),2,cv2.LINE_AA)
                 cv2.imshow('LOGIN',frame)
                 if (cv2.waitKey(1) & 0xFF) == ord('q'):
                     break
             cap.release()
             cv2.destroyAllWindows()
-            names,rolls,times,l = extract_attendance()    
+            cnics,times,l = extract_attendance()    
             return redirect(url_for("candidate"))
 
         else:
-            return 'Please enter correct email / password !'
+            flash('Please Enter Correct Email / Password !')
         
     return render_template('candidate/loginCandidate.html', message = message)
-
-
 
 #FACE RECOGNITION
 
@@ -349,7 +367,7 @@ if not os.path.isdir('static/faces'):
     os.makedirs('static/faces')
 if f'Attendance-{datetoday()}.csv' not in os.listdir('Attendance'):
     with open(f'Attendance/Attendance-{datetoday()}.csv','w') as f:
-        f.write('Name,Roll,Time')
+        f.write('Cnic,Time')
 
 
 #### get a number of total registered users
@@ -390,36 +408,20 @@ def train_model():
 #### Extract info from today's attendance file in attendance folder
 def extract_attendance():
     df = pd.read_csv(f'Attendance/Attendance-{datetoday()}.csv')
-    names = df['Name']
-    rolls = df['Roll']
+    names = df['Cnic']
     times = df['Time']
     l = len(df)
-    return names,rolls,times,l
+    return names,times,l
 
 
-#### Add Attendance of a specific user
-def add_attendance(cnic):
+#### Add Login time of a specific user
+def add_login_time(user_info):
     current_time = datetime.now().strftime("%H:%M:%S")
-    
     df = pd.read_csv(f'Attendance/Attendance-{datetoday()}.csv')
     with open(f'Attendance/Attendance-{datetoday()}.csv','a') as f:
-        f.write(f'\n{cnic},{current_time}')
+        f.write(f'\n{user_info},{current_time}')
 
-
-################## ROUTING FUNCTIONS #########################
-
-#### Our main page
-@app.route('/face_recognition')
-def home():
-    names,rolls,times,l = extract_attendance()    
-    return render_template('home.html',names=names,rolls=rolls,times=times,l=l,totalreg=totalreg(),datetoday2=datetoday2()) 
-
-
-
-
-#### This function will run when we add a new user
-
-#### Our main function which runs the Flask App
+# Our main page
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 

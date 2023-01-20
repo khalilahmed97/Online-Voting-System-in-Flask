@@ -14,12 +14,11 @@
     <title>Candidate Login</title>
     <!--<title>Login & Registration Form</title>-->
     <style>
-        .alert {
+        .warning{
             position: absolute;
             padding: 20px;
-            background-color: rgb(9, 146, 161);
+            background-color: rgb(161, 32, 9);
             color: white;
-            margin-bottom: 15px;
             bottom: 0px;
             left: 0px;
             width: 100%;
@@ -58,7 +57,7 @@
                     <div class="input-field">
                         <input type="password" class="password" placeholder="Enter your Passwword" name="password" required>
                         <i class="uil uil-lock icon"></i>
-                        <i class="uil uil-eye-slash showHidePw"></i>
+                       
                     </div>
 
                     <div class="checkbox-text">
@@ -86,7 +85,7 @@
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for msg in messages %}
-    <div class="alert">
+    <div class="warning">
         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
         {{msg}}
     </div>

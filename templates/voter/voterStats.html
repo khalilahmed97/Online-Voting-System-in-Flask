@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="{{url_for('static',filename='candidateDashboardStyle.css')}}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid rgb(56, 55, 55);
+        }
+
+        .table-users {
+            border: 1px solid rgb(56, 55, 55);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.318);
+            max-width: calc(100% - 2em);
+            margin: 1em auto;
+            overflow: hidden;
+            width: 800px;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table th {
+            font-weight: 100;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header class="app-header">
+            <div class="app-header-logo">
+                <div class="logo">
+                    <span class="logo-icon">
+                        <img src="https://assets.codepen.io/285131/almeria-logo.svg" />
+                    </span>
+                    <h1 class="logo-title">
+                        <span>Voting</span>
+                        <span>System</span>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="app-header-actions">
+                <button class="user-profile">
+                    <span>{{session.name}}</span>
+                    <span>
+                        <img src="{{session.pic}}" />
+                    </span>
+                </button>
+                <div class="app-header-actions-buttons">
+                    <button class="icon-button large">
+                        <i class="ph-magnifying-glass"></i>
+                    </button>
+                    <button class="icon-button large">
+                        <i class="ph-bell"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="app-header-mobile">
+                <button class="icon-button large">
+                    <i class="ph-list"></i>
+                </button>
+            </div>
+            <div class="btn logoutBtn">
+                <a href="/logout">LOG OUT</a>
+            </div>
+
+        </header>
+        <div class="app-body">
+            <div class="app-body-navigation">
+                <nav class="navigation">
+                    <a href="/voter">
+                        <i class="ph-browsers"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/voteCast">
+                        <i class="ph-check-square"></i>
+                        <span>Cast Vote</span>
+                    </a>
+
+                    <a href="/voterStats">
+                        <i class="ph-file-text"></i>
+                        <span>Statistics</span>
+                    </a>
+                </nav>
+                <footer class="footer">
+                    <h1>VOTING SYSTEM<small>©</small></h1>
+                    <div>
+                        ONLINE VOTING ©<br />
+                        All Rights Reserved 2023
+                    </div>
+                </footer>
+            </div>
+            <div class="app-body-main-content">
+                <section class="service-section">
+                    <h2>STATISTICS</h2>
+                        <div class="table-users">
+
+
+                            <table cellspacing="0">
+                                <tr>
+                                    <th width="200">Picture</th>
+                                    <th width="200">Name</th>
+                                    <th width="200">Party Sign</th>
+                                    <th width="230">Number of Votes</th>
+                                </tr>
+
+                                {% for row in candidates %}
+                                <tr id="{{row.ID}}">
+                                    <td><img src="{{row.pic}}" width="50"alt="" />
+                                    <td>{{row.candidate_name}}</td>
+                                    <td>{{row.party_symbol}}</td>
+                                    <td>{{row.number_of_votes}}</td>
+                                </tr>
+
+                                {% endfor %}
+                            </table>
+                        </div>
+                </section>
+            </div>
+</body>
+
+</html>

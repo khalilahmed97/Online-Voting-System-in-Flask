@@ -144,16 +144,16 @@
                         <span>Cast Vote</span>
                     </a>
 
-                    <a href="/stats">
+                    <a href="/voterStats">
                         <i class="ph-file-text"></i>
                         <span>Statistics</span>
                     </a>
                 </nav>
                 <footer class="footer">
-                    <h1>Almeria<small>©</small></h1>
+                    <h1>VOTING SYSTEM<small>©</small></h1>
                     <div>
-                        Almeria ©<br />
-                        All Rights Reserved 2021
+                        ONLINE VOTING ©<br />
+                        All Rights Reserved 2023
                     </div>
                 </footer>
             </div>
@@ -175,7 +175,7 @@
                                     {% for row in candidates %}
 
                                     <tr id="{{row.ID}}">
-                                        <td><img src="{{session.pic}}" width="50"alt="" />
+                                        <td><img src="{{row.pic}}" width="50"alt="" />
                                         <td><input type="hidden" name="name" value="{{row.name}}">{{row.name}}</td>
                                         <td><input type="hidden" name="partySymbol"
                                                 value="{{row.party_symbol}}">{{row.party_symbol}}</td>

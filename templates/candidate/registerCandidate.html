@@ -14,12 +14,21 @@
     <link rel="stylesheet" href="{{url_for('static',filename='loginStyle.css')}}">
     <title>Candidate Registeration</title>
     <style>
-        .alert {
+        .success {
             position: absolute;
             padding: 20px;
-            background-color: rgb(9, 146, 161);
+            background-color: rgb(9, 161, 52);
             color: white;
-            margin-bottom: 15px;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+        }
+
+        .warning {
+            position: absolute;
+            padding: 20px;
+            background-color: rgb(161, 32, 9);
+            color: white;
             bottom: 0px;
             left: 0px;
             width: 100%;
@@ -78,7 +87,7 @@
                         <input type="password" class="password" placeholder="Confirm a password" name="confirm_password"
                             required>
                         <i class="uil uil-lock icon"></i>
-                        <i class="uil uil-eye-slash showHidePw"></i>
+                       
                     </div>
 
 
@@ -99,10 +108,18 @@
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for msg in messages %}
-    <div class="alert">
+    {% if msg == "You have successfully registered !" %}
+    <div class="success">
         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
         {{msg}}
     </div>
+
+    {% else %}
+    <div class="warning">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{msg}}
+    </div>
+    {% endif %}
     {% endfor %}
     {% endif %}
     {% endwith %}
