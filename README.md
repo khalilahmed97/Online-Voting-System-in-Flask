@@ -19,7 +19,9 @@ In order to run the system you have to follow these steps:
 ## DATABASE
 
 DATABASE NAME = online_voting_system
+
 NUMBER OF TABLES IN A DATABASE = 3
+
 NAME OF THE TABLES:
 1)- voters
 2) candidates
